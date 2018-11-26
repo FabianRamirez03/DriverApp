@@ -16,7 +16,6 @@ import com.example.ramir.driverapp.MapActivity;
 import com.example.ramir.driverapp.R;
 import com.example.ramir.driverapp.client.RestClient;
 import com.example.ramir.driverapp.map.Graph;
-import com.example.ramir.driverapp.map.MapGenerator;
 import com.example.ramir.driverapp.map.Node;
 import com.example.ramir.driverapp.util.DoubleArray;
 import com.example.ramir.driverapp.util.Math;
@@ -34,6 +33,7 @@ public class Drawer extends View {
     private Paint roadPaint = new Paint();
     private Paint textPaint = new Paint();
     private Paint focusPaint = new Paint();
+    private Paint pathPaint = new Paint();
 
     private List<Node<String>> nodes = new ArrayList<>();
     private List<Sprite> buildings = new ArrayList<>();
@@ -41,6 +41,7 @@ public class Drawer extends View {
     private List<DoubleArray<Sprite, Sprite>> roads = new ArrayList<>();
     private List<Integer> hList = houseList();
     private List<Integer> bList = buildingList();
+    private List<DoubleArray<Sprite, Sprite>> carPath = new ArrayList<>();
 
     // Manages the movement of the view
     private int xPoss = 0;
@@ -79,6 +80,8 @@ public class Drawer extends View {
         textPaint.setTextSize(70);
         textPaint.setColor(Color.BLACK);
         focusPaint.setColor(Color.GREEN);
+        pathPaint.setColor(Color.MAGENTA);
+        pathPaint.setStrokeWidth(30);
     }
 
     @Override
@@ -96,6 +99,17 @@ public class Drawer extends View {
             Sprite sprite1 = array.getFirst();
             Sprite sprite2 = array.getSecond();
             canvas.drawLine(sprite1.getX(), sprite1.getY(), sprite2.getX(), sprite2.getY(), roadPaint);
+
+            // Draw the distances
+            String text = Integer.toString(sprite1.getNode().getAdjacent().get(sprite2.getNode()));
+            canvas.drawText(text, (sprite1.getX() + sprite2.getX()) / 2, (sprite1.getY() + sprite2.getY()) / 2, textPaint);
+        }
+
+        // Draws the path
+        for (DoubleArray<Sprite, Sprite> array : carPath) {
+            Sprite sprite1 = array.getFirst();
+            Sprite sprite2 = array.getSecond();
+            canvas.drawLine(sprite1.getX(), sprite1.getY(), sprite2.getX(), sprite2.getY(), pathPaint);
 
             // Draw the distances
             String text = Integer.toString(sprite1.getNode().getAdjacent().get(sprite2.getNode()));
@@ -242,16 +256,18 @@ public class Drawer extends View {
                 // Make recursive connections
                 setSpritePoss(s);
             } else {
-                Sprite s = lookBuilding(k);
+                Sprite s = lookForNodeSprite(k);
                 if (s != null) roads.add(new DoubleArray<>(sprite, s));
             }
         });
     }
 
-    public void drawCar(Bitmap bitmap){
+    public void drawRoad(Sprite sprite1, Sprite sprite2){
+        carPath.add(new DoubleArray<>(sprite1, sprite2));
 
     }
-    private Sprite lookBuilding(Node<String> k) {
+
+    public Sprite lookForNodeSprite(Node<String> k) {
         Sprite sprite = null;
         for (Sprite building: buildings) {
             if (building.getNode().equals(k)) {

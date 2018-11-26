@@ -1,10 +1,7 @@
 package com.example.ramir.driverapp;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.XmlRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -13,8 +10,11 @@ import android.widget.TextView;
 import com.example.ramir.driverapp.client.RestClient;
 import com.example.ramir.driverapp.draw.Drawer;
 import com.example.ramir.driverapp.draw.Sprite;
+import com.example.ramir.driverapp.map.Graph;
 import com.example.ramir.driverapp.map.Node;
 import com.example.ramir.driverapp.util.DoubleArray;
+
+import java.util.List;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -35,10 +35,15 @@ public class MapActivity extends AppCompatActivity {
     }
 
     public void pressedFindRide(View view) {
-        RestClient.getGraph();
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
-        bitmap = Bitmap.createScaledBitmap(bitmap, 100, 50, false);
-        drawer.drawCar(bitmap);
+        Graph graph = RestClient.getGraph();
+        List<Node<String>> nodeList = graph.path(locationsSelected.getFirst().getNode(), locationsSelected.getSecond().getNode());
+        for (int i = 1; i < nodeList.size(); i++) {
+            Node<String> node1 = nodeList.get(i-1);
+            Node<String> node2 = nodeList.get(i);
+            Sprite sprite1 = drawer.lookForNodeSprite(node1);
+            Sprite sprite2 = drawer.lookForNodeSprite(node2);
+            drawer.drawRoad(sprite1, sprite2);
+        }
 
     }
 

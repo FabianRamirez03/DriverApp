@@ -43,6 +43,10 @@ public class Graph {
         Node<String> node = null;
         while (node != node1) {
             node = predecessors[i][j];
+            if (node == null){
+                nodes = null;
+                break;
+            }
             nodes.add(node);
             j = vertices.indexOf(node);
         }
