@@ -1,5 +1,6 @@
 package com.example.ramir.driverapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         continueBtn = findViewById(R.id.continueBtn);
+        continueButton();
     }
 
     @Override
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void openScannerActivity(View view) {
-        Intent intent = new Intent(this, MapActivity.class);
+        Intent intent = new Intent(this, ScannerActivity.class);
         startActivity(intent);
     }
 }

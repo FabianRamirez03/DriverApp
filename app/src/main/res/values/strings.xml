@@ -2,5 +2,5 @@
     <string name="app_name">DriverApp</string>
     <string name="please_select_your_location">Please select your location</string>
     <string name="please_select_your_destiny">Please select your destiny</string>
-    <string name="find_ride">Find Ride</string>
+    <string name="find_ride">Start Ride</string>
 </resources>

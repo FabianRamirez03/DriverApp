@@ -37,6 +37,7 @@
         android:backgroundTint="@color/colorPrimary"
         android:text="@string/find_ride"
         android:visibility="gone"
+        android:onClick="pressedFindRide"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

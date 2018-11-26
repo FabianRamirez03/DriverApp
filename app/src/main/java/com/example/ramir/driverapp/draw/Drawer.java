@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.example.ramir.driverapp.MapActivity;
 import com.example.ramir.driverapp.R;
+import com.example.ramir.driverapp.client.RestClient;
 import com.example.ramir.driverapp.map.Graph;
 import com.example.ramir.driverapp.map.MapGenerator;
 import com.example.ramir.driverapp.map.Node;
@@ -28,7 +29,7 @@ public class Drawer extends View {
 
     private Canvas canvas;
     private MapActivity activity;
-    private Graph graph = MapGenerator.generateGraph(30);
+    private Graph graph = RestClient.getGraph();
 
     private Paint roadPaint = new Paint();
     private Paint textPaint = new Paint();
