@@ -35,9 +35,9 @@ public class Drawer extends View {
     private Paint focusPaint = new Paint();
 
     private List<Node<String>> nodes = new ArrayList<>();
-    private List<com.example.ramir.driverapp.draw.Sprite> buildings = new ArrayList<>();
-    private List<com.example.ramir.driverapp.draw.Sprite> circles = new ArrayList<>();
-    private List<DoubleArray<com.example.ramir.driverapp.draw.Sprite, com.example.ramir.driverapp.draw.Sprite>> roads = new ArrayList<>();
+    private List<Sprite> buildings = new ArrayList<>();
+    private List<Sprite> circles = new ArrayList<>();
+    private List<DoubleArray<Sprite, Sprite>> roads = new ArrayList<>();
     private List<Integer> hList = houseList();
     private List<Integer> bList = buildingList();
 
@@ -86,14 +86,14 @@ public class Drawer extends View {
         if (buildings.isEmpty()) drawMap();
 
         // Draws the circles
-        for (com.example.ramir.driverapp.draw.Sprite sprite : circles) {
+        for (Sprite sprite : circles) {
             canvas.drawCircle(sprite.getX(), sprite.getY(), sprite.getWidth(), focusPaint);
         }
 
         // Draws the roads
-        for (DoubleArray<com.example.ramir.driverapp.draw.Sprite, com.example.ramir.driverapp.draw.Sprite> array : roads) {
-            com.example.ramir.driverapp.draw.Sprite sprite1 = array.getFirst();
-            com.example.ramir.driverapp.draw.Sprite sprite2 = array.getSecond();
+        for (DoubleArray<Sprite, Sprite> array : roads) {
+            Sprite sprite1 = array.getFirst();
+            Sprite sprite2 = array.getSecond();
             canvas.drawLine(sprite1.getX(), sprite1.getY(), sprite2.getX(), sprite2.getY(), roadPaint);
 
             // Draw the distances
@@ -102,7 +102,7 @@ public class Drawer extends View {
         }
 
         // Draws the buildings
-        for (com.example.ramir.driverapp.draw.Sprite sprite : buildings) {
+        for (Sprite sprite : buildings) {
             canvas.drawBitmap(sprite.getBitmap(), sprite.getX() - sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, null);
         }
 
@@ -122,7 +122,7 @@ public class Drawer extends View {
             case MotionEvent.ACTION_UP:
                 xPoss = (int) event.getX();
                 yPoss = (int) event.getY();
-                for (com.example.ramir.driverapp.draw.Sprite sprite : buildings) {
+                for (Sprite sprite : buildings) {
                     if (inSpriteBoundaries(sprite, xPoss, yPoss)) {
                         spriteClicked(sprite);
                         break;
@@ -135,7 +135,7 @@ public class Drawer extends View {
                 yPoss = (int) event.getY();
 
                 if (xPoss != lastXPoss || yPoss != lastYPoss) {
-                    for (com.example.ramir.driverapp.draw.Sprite sprite : buildings) {
+                    for (Sprite sprite : buildings) {
                         int x = sprite.getX() + (xPoss - lastXPoss);
                         int y = sprite.getY() + (yPoss - lastYPoss);
                         sprite.setX(x);
@@ -195,18 +195,18 @@ public class Drawer extends View {
     private void drawMap() {
         List<Node<String>> vertices = graph.getVertices();
 
-        // Sets the TEC in the center of the com.example.ramir.driverapp.map
+        // Sets the TEC in the center of the map
         int x = canvas.getWidth() / 2;
         int y = canvas.getHeight() / 2;
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.edificio1);
         bitmap = Bitmap.createScaledBitmap(bitmap, 250, 200, false);
-        com.example.ramir.driverapp.draw.Sprite TEC = new com.example.ramir.driverapp.draw.Sprite(x, y, 250, 200, vertices.get(0));
+        Sprite TEC = new Sprite(x, y, 250, 200, vertices.get(0));
         TEC.setBitmap(bitmap);
         setSpritePoss(TEC);
 
         for (Node<String> node : vertices) {
             if (!nodes.contains(node)) {
-                com.example.ramir.driverapp.draw.Sprite sprite = wrapToSprite(node);
+                Sprite sprite = wrapToSprite(node);
                 sprite.setX(Math.getRandomNumberInRange(minX, maxX));
                 sprite.setY(Math.getRandomNumberInRange(minY, maxY));
                 setSpritePoss(sprite);
@@ -214,14 +214,14 @@ public class Drawer extends View {
         }
     }
 
-    private void setSpritePoss(com.example.ramir.driverapp.draw.Sprite sprite) {
+    private void setSpritePoss(Sprite sprite) {
         Node<String> node = sprite.getNode();
         nodes.add(node);
         buildings.add(sprite);
         HashMap<Node<String>, Integer> adjacent = node.getAdjacent();
         adjacent.forEach((k, v) -> {
             if (!nodes.contains(k)) {
-                com.example.ramir.driverapp.draw.Sprite s = wrapToSprite(k);
+                Sprite s = wrapToSprite(k);
                 nodes.add(k);
                 buildings.add(s);
 
@@ -241,15 +241,15 @@ public class Drawer extends View {
                 // Make recursive connections
                 setSpritePoss(s);
             } else {
-                com.example.ramir.driverapp.draw.Sprite s = lookBuilding(k);
+                Sprite s = lookBuilding(k);
                 if (s != null) roads.add(new DoubleArray<>(sprite, s));
             }
         });
     }
 
-    private com.example.ramir.driverapp.draw.Sprite lookBuilding(Node<String> k) {
-        com.example.ramir.driverapp.draw.Sprite sprite = null;
-        for (com.example.ramir.driverapp.draw.Sprite building: buildings) {
+    private Sprite lookBuilding(Node<String> k) {
+        Sprite sprite = null;
+        for (Sprite building: buildings) {
             if (building.getNode().equals(k)) {
                 sprite = building;
                 break;
@@ -266,28 +266,28 @@ public class Drawer extends View {
         if (y > maxY) maxY = y;
     }
 
-    private com.example.ramir.driverapp.draw.Sprite wrapToSprite(Node<String> node) {
+    private Sprite wrapToSprite(Node<String> node) {
         String name = node.getElement();
-        com.example.ramir.driverapp.draw.Sprite sprite = null;
+        Sprite sprite = null;
 
         if (name.startsWith("B")) {
             int b = Math.getRandomNumberInRange(0, bList.size() - 1);
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), bList.get(b));
             bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
-            sprite = new com.example.ramir.driverapp.draw.Sprite(0, 0, 200, 200, node);
+            sprite = new Sprite(0, 0, 200, 200, node);
             sprite.setBitmap(bitmap);
         } else if (name.startsWith("C")) {
             int h = Math.getRandomNumberInRange(0, hList.size() - 1);
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), hList.get(h));
             bitmap = Bitmap.createScaledBitmap(bitmap, 160, 160, false);
-            sprite = new com.example.ramir.driverapp.draw.Sprite(0, 0, 160, 160, node);
+            sprite = new Sprite(0, 0, 160, 160, node);
             sprite.setBitmap(bitmap);
         }
 
         return sprite;
     }
 
-    private void spriteClicked(com.example.ramir.driverapp.draw.Sprite sprite) {
+    private void spriteClicked(Sprite sprite) {
 
         boolean focus = !sprite.isFocus();
         sprite.setFocus(focus);
@@ -297,7 +297,7 @@ public class Drawer extends View {
         activity.selectLocation(sprite);
     }
 
-    private boolean inSpriteBoundaries(com.example.ramir.driverapp.draw.Sprite sprite, int x, int y) {
+    private boolean inSpriteBoundaries(Sprite sprite, int x, int y) {
         boolean in = false;
         int hw = sprite.getWidth() / 2;
         int hh = sprite.getHeight() / 2;
