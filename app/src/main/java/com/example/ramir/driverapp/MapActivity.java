@@ -1,6 +1,8 @@
 package com.example.ramir.driverapp;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.XmlRes;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.example.ramir.driverapp.client.RestClient;
 import com.example.ramir.driverapp.draw.Drawer;
 import com.example.ramir.driverapp.draw.Sprite;
+import com.example.ramir.driverapp.map.Node;
 import com.example.ramir.driverapp.util.DoubleArray;
 
 public class MapActivity extends AppCompatActivity {
@@ -33,6 +36,10 @@ public class MapActivity extends AppCompatActivity {
 
     public void pressedFindRide(View view) {
         RestClient.getGraph();
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
+        bitmap = Bitmap.createScaledBitmap(bitmap, 100, 50, false);
+        drawer.drawCar(bitmap);
+
     }
 
     public void selectLocation(Sprite sprite) {

@@ -27,7 +27,7 @@ import java.util.List;
 
 public class Drawer extends View {
 
-    private Canvas canvas;
+    public Canvas canvas;
     private MapActivity activity;
     private Graph graph = RestClient.getGraph();
 
@@ -248,6 +248,9 @@ public class Drawer extends View {
         });
     }
 
+    public void drawCar(Bitmap bitmap){
+
+    }
     private Sprite lookBuilding(Node<String> k) {
         Sprite sprite = null;
         for (Sprite building: buildings) {
