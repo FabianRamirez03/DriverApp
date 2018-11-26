@@ -1,10 +1,9 @@
 package com.example.ramir.driverapp.map;
 
-import com.example.ramir.driverapp.util.Math;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import com.example.ramir.driverapp.util.Math;
 
 public class MapGenerator {
 
@@ -18,19 +17,19 @@ public class MapGenerator {
      * @return the random Graph
      */
     public static Graph generateGraph(int size) {
-        List<com.example.ramir.driverapp.map.Node<String>> nodes = new ArrayList<>();
+        List<Node<String>> nodes = new ArrayList<>();
         String[] names = generateNames(size);
 
         // Creates the nodes that will be in vertices list
         for (int i = 0; i < size; i++) {
             String name = names[i];
-            com.example.ramir.driverapp.map.Node<String> node = new com.example.ramir.driverapp.map.Node<>(name);
+            Node<String> node = new Node<>(name);
             nodes.add(node);
         }
 
         // Set randomly the adjacent nodes and magnitudes of every node
-        for (com.example.ramir.driverapp.map.Node<String> node : nodes) {
-            HashMap<com.example.ramir.driverapp.map.Node<String>, Integer> connections = generateConnections(nodes);
+        for (Node<String> node : nodes) {
+            HashMap<Node<String>, Integer> connections = generateConnections(nodes);
             node.setAdjacent(connections);
         }
 
@@ -50,14 +49,14 @@ public class MapGenerator {
         return names;
     }
 
-    private static HashMap<com.example.ramir.driverapp.map.Node<String>, Integer> generateConnections(List<com.example.ramir.driverapp.map.Node<String>> nodes) {
-        HashMap<com.example.ramir.driverapp.map.Node<String>, Integer> map = new HashMap<>();
+    private static HashMap<Node<String>, Integer> generateConnections(List<Node<String>> nodes) {
+        HashMap<Node<String>, Integer> map = new HashMap<>();
 
         int maxConnections = Math.getRandomNumberInRange(connections[0], connections[1]);
         for (int i = 0; i < maxConnections; i++) {
             int duration = Math.getRandomNumberInRange(magnitude[0], magnitude[1]);
             int nodeIndex = Math.getRandomNumberInRange(0, nodes.size() - 1);
-            com.example.ramir.driverapp.map.Node<String> node = nodes.get(nodeIndex);
+            Node<String> node = nodes.get(nodeIndex);
             map.put(node, duration);
         }
 

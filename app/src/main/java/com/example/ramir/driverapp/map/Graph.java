@@ -1,7 +1,6 @@
 package com.example.ramir.driverapp.map;
 
 import com.example.ramir.driverapp.util.DoubleArray;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,10 +8,10 @@ import java.util.List;
 
 public class Graph {
 
-    private List<com.example.ramir.driverapp.map.Node<String>> vertices = new ArrayList<>();
+    private List<Node<String>> vertices = new ArrayList<>();
     private Integer[][] distances;  // Matrix with shorter distance between nodes
-    private com.example.ramir.driverapp.map.Node<String>[][] predecessors;  // Matrix with predecessors of the nodes
-    private HashMap<com.example.ramir.driverapp.map.Node<String>, DoubleArray<Integer, com.example.ramir.driverapp.map.Node<String>>> matrix = new HashMap<>();  // Node, [Distance, Predecessor]
+    private Node<String>[][] predecessors;  // Matrix with predecessors of the nodes
+    private HashMap<Node<String>, DoubleArray<Integer, Node<String>>> matrix = new HashMap<>();  // Node, [Distance, Predecessor]
 
 
     public Graph() {
@@ -23,7 +22,7 @@ public class Graph {
      *
      * @param vertices the list of nodes that will form the graph
      */
-    public Graph(List<com.example.ramir.driverapp.map.Node<String>> vertices) {
+    public Graph(List<Node<String>> vertices) {
         this.vertices = vertices;
         floyd_warshall();
     }
@@ -35,13 +34,13 @@ public class Graph {
      * @param node2 final node
      * @return a list of nodes from the initial to the final
      */
-    public final List<com.example.ramir.driverapp.map.Node<String>> path(com.example.ramir.driverapp.map.Node<String> node1, com.example.ramir.driverapp.map.Node<String> node2) {
-        List<com.example.ramir.driverapp.map.Node<String>> nodes = new ArrayList<>();
+    public final List<Node<String>> path(Node<String> node1, Node<String> node2) {
+        List<Node<String>> nodes = new ArrayList<>();
         int i = vertices.indexOf(node1);
         int j = vertices.indexOf(node2);
         nodes.add(node2);
 
-        com.example.ramir.driverapp.map.Node<String> node = null;
+        Node<String> node = null;
         while (node != node1) {
             node = predecessors[i][j];
             nodes.add(node);
@@ -58,14 +57,14 @@ public class Graph {
      * @param node the reference node to calculate distance
      * @return a Map with the node as the key and a double array of the [distance, predecessor] as the value
      */
-    public final HashMap<com.example.ramir.driverapp.map.Node<String>, DoubleArray<Integer, com.example.ramir.driverapp.map.Node<String>>> dijkstra(com.example.ramir.driverapp.map.Node<String> node) {
-        List<com.example.ramir.driverapp.map.Node<String>> V = new ArrayList<>();
-        List<com.example.ramir.driverapp.map.Node<String>> NV = new ArrayList<>();
+    public final HashMap<Node<String>, DoubleArray<Integer, Node<String>>> dijkstra(Node<String> node) {
+        List<Node<String>> V = new ArrayList<>();
+        List<Node<String>> NV = new ArrayList<>();
 
         // Sets the matrix with magnitudes -1 and predecessors null
         matrix.clear();
-        for (com.example.ramir.driverapp.map.Node<String> n : vertices) {
-            DoubleArray<Integer, com.example.ramir.driverapp.map.Node<String>> array = new DoubleArray<>(-1, null);
+        for (Node<String> n : vertices) {
+            DoubleArray<Integer, Node<String>> array = new DoubleArray<>(-1, null);
             matrix.put(n, array);
         }
 
